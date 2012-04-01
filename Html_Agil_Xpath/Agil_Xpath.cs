@@ -71,7 +71,7 @@ namespace Html_Agil_Xpath
         void findNode(HtmlNode node, string search,int count)
         {   // in case we have two cases down the tree
             int countofterm = Regex.Matches(m_document.DocumentNode.OuterHtml, search).Cast<Match>().Count();
-            if (node.OuterHtml.Contains(search))
+            if (node.OuterHtml.IndexOf(search,StringComparison.InvariantCultureIgnoreCase)!=-1)
             {
                 if (!node.XPath.Contains("#"))
                     m_xmlPaths.Add(node.XPath);

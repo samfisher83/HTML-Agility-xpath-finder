@@ -92,21 +92,24 @@ namespace Html_Agil_Xpath
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-
-            Debug.WriteLine("Entering Browser Complete");
-            if (dont_update_browser)
-            {
-                dont_update_browser = false;
-                Debug.WriteLine("Not Leaving");
+            if (e.Url.AbsolutePath != webBrowser1.Url.AbsolutePath)
                 return;
-            }
+
+            //Debug.WriteLine("Entering Browser Complete");
+            //if (dont_update_browser)
+            //{
+            //    dont_update_browser = false;
+            //    Debug.WriteLine("Not Leaving");
+            //    return;
+            //}
 
             //throw new NotImplementedException();
             //textBox1.Text = webBrowser1.DocumentText;
             //webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
             string html = webBrowser1.Document.Body.Parent.OuterHtml;
             textBox1.Text = html;
-            Debug.WriteLine("Leaving Browser Complete");
+            
+            //Debug.WriteLine("Leaving Browser Complete");
         }
 
         private void SetBrowser()
@@ -159,6 +162,7 @@ namespace Html_Agil_Xpath
         private void findSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IHTMLDocument2 htmlDocument = webBrowser1.Document.DomDocument as IHTMLDocument2;
+            
 
             IHTMLSelectionObject currentSelection = htmlDocument.selection;
             
@@ -171,7 +175,20 @@ namespace Html_Agil_Xpath
                 if (range != null)
                 {
                     string_find = range.text;
-                    doFind(string_find);
+                    
+
+                    if (string_find != null)
+                    {
+                        doFind(string_find);
+                    }
+                    else
+                    {
+                        
+                        string_find = range.htmlText;
+                        HtmlAgilityPack.HtmlDocument searchDoc = new HtmlAgilityPack.HtmlDocument();
+                        searchDoc.LoadHtml(string_find);
+                        doFind(searchDoc.DocumentNode.OuterHtml);
+                    }
                 }
             }
             else
